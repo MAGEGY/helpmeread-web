@@ -20,6 +20,7 @@ const HELP_HOWTOS: HelpHowTo[] = [
 export default function App() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [settings, setSettings] = useState<Settings>(getSettings())
   const [status, setStatus] = useState<Status>('idle')
   const [text, setText] = useState('')
@@ -159,7 +160,7 @@ export default function App() {
           <button className="primary big" onClick={startCamera}>📷 Start camera</button>
           <label className="primary big upload">
             🖼 Upload image
-            <input type="file" accept="image/*" onChange={onUpload} hidden />
+            <input ref={fileInputRef} type="file" accept="image/*" onChange={onUpload} hidden />
           </label>
           {error && <p className="error">{error}</p>}
         </div>
@@ -258,8 +259,8 @@ export default function App() {
       <footer className="footer">Text-to-speech uses your browser's built-in voice. Translation by MyMemory.</footer>
       <FloatingHelp
         functions={[
-          { label: 'Start camera & read', description: 'Point at any text and capture — the app reads it aloud', action: () => { setStatus('idle'); window.scrollTo({ top: 0, behavior: 'smooth' }) } },
-          { label: 'Upload an image', description: 'Use a photo from your device instead of the camera', action: () => { setStatus('idle'); window.scrollTo({ top: 0, behavior: 'smooth' }) } },
+          { label: 'Start camera & read', description: 'Point at any text and capture — the app reads it aloud', action: () => startCamera() },
+          { label: 'Upload an image', description: 'Use a photo from your device instead of the camera', action: () => fileInputRef.current?.click() },
           { label: 'Speed & volume', description: 'Adjust the reading voice sliders', action: () => document.querySelector('.controls')?.scrollIntoView({ behavior: 'smooth' }) },
           { label: 'Translate', description: 'Translate the scanned text to any of the 15 languages', action: () => document.querySelector('.translate-box')?.scrollIntoView({ behavior: 'smooth' }) },
           { label: 'History', description: 'Reopen and hear past scans', action: () => document.querySelector('.history')?.scrollIntoView({ behavior: 'smooth' }) },
