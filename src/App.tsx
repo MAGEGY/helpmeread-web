@@ -258,6 +258,7 @@ export default function App() {
 
       <footer className="footer">Text-to-speech uses your browser's built-in voice. Translation by MyMemory.</footer>
       <FloatingHelp
+        rtl={language.code === 'ar' || language.code === 'ur'}
         functions={[
           { label: 'Start camera & read', description: 'Point at any text and capture — the app reads it aloud', action: () => startCamera() },
           { label: 'Upload an image', description: 'Use a photo from your device instead of the camera', action: () => fileInputRef.current?.click() },
