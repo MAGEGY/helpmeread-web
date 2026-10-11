@@ -3,8 +3,19 @@ import type { ChangeEvent } from 'react'
 import { SUPPORTED_LANGUAGES } from './lib/languages'
 import { deleteHistory, getHistory, getSettings, languageByCode, saveHistory, saveSettings, speak, stopSpeaking, translate } from './lib/speech'
 import type { Settings } from './lib/speech'
+import FloatingHelp from './components/FloatingHelp'
+import type { HelpHowTo } from './components/FloatingHelp'
 
 type Status = 'idle' | 'camera' | 'ocr' | 'done' | 'error'
+
+const HELP_HOWTOS: HelpHowTo[] = [
+  { title: 'Read text from a photo', body: 'Pick the text language at the top (Arabic is the default), then tap "Start camera", point at the text and tap "Capture & read" — or tap "Upload image" to use a photo. The app recognizes the text, reads it aloud automatically and shows every line as a tappable block.' },
+  { title: 'Tap to hear a single line', body: 'After a scan, each recognized line is its own block. Tap any block to hear just that line — useful when the whole text is too long.' },
+  { title: 'Translate', body: 'After a scan, pick the language you want under Translate and tap the translate button. The translation appears in a green block and is read aloud. Tap "Read translation" to hear it again.' },
+  { title: 'Adjust speed and volume', body: 'The sliders at the top control the reading speed (0.5× to 2×) and volume. They are saved in your browser and applied to everything the app reads.' },
+  { title: 'History', body: 'Every scan is saved at the bottom of the page. Tap an entry to open it and hear it again; tap the red ✕ to delete it. The last 50 scans are kept.' },
+  { title: 'First use downloads a model', body: 'The first scan in each language downloads an OCR model (10-15 MB) from the internet. After that it is cached and scans are fast — even offline.' },
+]
 
 export default function App() {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -245,6 +256,16 @@ export default function App() {
       </section>
 
       <footer className="footer">Text-to-speech uses your browser's built-in voice. Translation by MyMemory.</footer>
+      <FloatingHelp
+        functions={[
+          { label: 'Start camera & read', description: 'Point at any text and capture — the app reads it aloud', action: () => { setStatus('idle'); window.scrollTo({ top: 0, behavior: 'smooth' }) } },
+          { label: 'Upload an image', description: 'Use a photo from your device instead of the camera', action: () => { setStatus('idle'); window.scrollTo({ top: 0, behavior: 'smooth' }) } },
+          { label: 'Speed & volume', description: 'Adjust the reading voice sliders', action: () => document.querySelector('.controls')?.scrollIntoView({ behavior: 'smooth' }) },
+          { label: 'Translate', description: 'Translate the scanned text to any of the 15 languages', action: () => document.querySelector('.translate-box')?.scrollIntoView({ behavior: 'smooth' }) },
+          { label: 'History', description: 'Reopen and hear past scans', action: () => document.querySelector('.history')?.scrollIntoView({ behavior: 'smooth' }) },
+        ]}
+        howtos={HELP_HOWTOS}
+      />
     </div>
   )
 }
